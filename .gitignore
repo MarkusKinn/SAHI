@@ -1,0 +1,17 @@
+# CMake build files
+cmake-build*/
+CMakeFiles/
+CMakeCache.txt
+CMakeScripts/
+CMakeTmp/
+Makefile
+cmake_install.cmake
+*.cmake
+!CMakeLists.txt
+!*.cmake.in
+
+# Exclude the build directory
+build/
+
+# JetBrains IDEs
+.idea/
