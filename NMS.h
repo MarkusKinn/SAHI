@@ -7,6 +7,11 @@
 
 struct BoundingBox {
     float x, y, w, h, score;
+    int sliceIndex;
+
+    BoundingBox(float x, float y, float w, float h, float score, int sliceIndex)
+        : x(x), y(y), w(w), h(h), score(score), sliceIndex(sliceIndex) {}
+
 };
 
 class NMS {

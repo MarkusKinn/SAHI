@@ -6,9 +6,11 @@ find_package(OpenCV REQUIRED) # Find OpenCV package
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 add_executable(SAHI main.cpp ImageSlicer.h
-        ImageSlicer.tpp
-        ImageSlicer.tpp
+        ImageSlicer.cpp
+        ImageSlicer.cpp
         NMS.h
         temp.txt
-        main.cpp)  # Assuming ImageSlicer.cpp is the name of the file
+        main.cpp
+        ImageStreamProcessor.h
+)  # Assuming ImageSlicer.cpp is the name of the file
 target_link_libraries(SAHI ${OpenCV_LIBS}) # Link OpenCV libraries

@@ -1,7 +1,5 @@
-#include <future>
 #include <vector>
 #include <opencv2/opencv.hpp>
-#include <omp.h>
 
 #include "ImageSlicer.h"
 
@@ -9,8 +7,10 @@ ImageSlicer::ImageSlicer(int slice_height, int slice_width, float overlap_height
     : slice_height_(slice_height), slice_width_(slice_width),
       overlap_height_ratio_(overlap_height_ratio), overlap_width_ratio_(overlap_width_ratio) {}
 
-std::vector<cv::Rect> ImageSlicer::calculateSliceRegions(int image_height, int image_width) {
-    std::vector<cv::Rect> regions;
+std::vector<std::pair<cv::Rect, int>> ImageSlicer::calculateSliceRegions(int image_height, int image_width) {
+    std::vector<std::pair<cv::Rect, int>> regions;
+
+    int index = 0;
 
     int step_height = slice_height_ - static_cast<int>(slice_height_ * overlap_height_ratio_);
     int step_width = slice_width_ - static_cast<int>(slice_width_ * overlap_width_ratio_);
@@ -24,25 +24,25 @@ std::vector<cv::Rect> ImageSlicer::calculateSliceRegions(int image_height, int i
             if (x + width > image_width) width = image_width - x;
             if (y + height > image_height) height = image_height - y;
 
-            regions.push_back(cv::Rect(x, y, width, height));
+
+
+            regions.emplace_back(cv::Rect(x, y, width, height), index++);
         }
     }
-
     return regions;
 }
 
 
-void ImageSlicer::slice(const cv::Mat& image, std::function<void(const cv::Mat&)> processSlice) {
-    std::vector<cv::Rect> regions = calculateSliceRegions(image.rows, image.cols);
+void ImageSlicer::slice(const cv::Mat& image, const std::function<void(const cv::Mat&, int)>& processSlice) {
+    std::vector<std::pair<cv::Rect, int>> regions = calculateSliceRegions(image.rows, image.cols);
 
     // Parallelize this loop with OpenMP
-#pragma omp parallel for
+    #pragma omp parallel for
     for (size_t i = 0; i < regions.size(); ++i) {
-        const auto& region = regions[i];
+        const auto& [region, index] = regions[i];  // Structured binding (C++17 feature)
         cv::Mat slice = image(region); // Without cloning if processSlice doesn't modify the slice
 
         // OpenMP manages the creation and destruction of threads efficiently
-        processSlice(slice);
+        processSlice(slice, index);  // Pass slice and its index
     }
 }
-
