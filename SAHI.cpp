@@ -20,11 +20,14 @@ std::vector<std::pair<cv::Rect, int>> SAHI::calculateSliceRegions(int image_heig
             int width = slice_width_;
             int height = slice_height_;
 
-            // Adjust width and height for slices at the edges of the image
-            if (x + width > image_width) width = image_width - x;
-            if (y + height > image_height) height = image_height - y;
+            int temp_x = x;
+            int temp_y = y;
 
-            regions.emplace_back(cv::Rect(x, y, width, height), index++);
+            // Adjust width and height for slices at the edges of the image
+            if (x + width > image_width) temp_x -= (x + width) - image_width;
+            if (y + height > image_height) temp_y -= (y + height) - image_height;
+
+            regions.emplace_back(cv::Rect(temp_x, temp_y, width, height), index++);
         }
     }
     return regions;
