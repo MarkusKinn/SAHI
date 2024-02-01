@@ -18,7 +18,7 @@ public:
     std::vector<std::pair<cv::Rect, int>> calculateSliceRegions(int image_height, int image_width);
     void slice(const cv::Mat& image, const std::function<void(const cv::Mat&, int)>& processSlice);
     float IoU(const BoundingBox& a, const BoundingBox& b);
-    cv::Rect mapToOriginal(const BoundingBox& boundingBox, const cv::Rect& sliceRegion);
+    BoundingBox mapToOriginal(BoundingBox& boundingBox, const cv::Rect& sliceRegion);
     std::vector<BoundingBox> nonMaximumSuppression(std::vector<BoundingBox>& boxes, float iouThreshold);
 
 private:

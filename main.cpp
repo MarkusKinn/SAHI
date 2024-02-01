@@ -34,7 +34,6 @@ int main() {
 
     // Initialize SAHI with desired parameters
     int sliceHeight = 160, sliceWidth = 160;
-
     float overlapHeightRatio = 0.2f, overlapWidthRatio = 0.2f;
     SAHI sahi(sliceHeight, sliceWidth, overlapHeightRatio, overlapWidthRatio);
 
@@ -55,22 +54,22 @@ int main() {
         }
     });
 
-    std::vector<cv::Rect> mappedBoxes; // Create a vector to store mapped bounding boxes
+    std::vector<BoundingBox> mappedBoxes; // Create a vector to store mapped bounding boxes
 
     cv::Mat imageWithBoxes = image.clone();
     for (auto& box : allBoxes) {
         auto region = sahi.calculateSliceRegions(image.rows, image.cols)[box.sliceIndex];
         auto mappedBox = sahi.mapToOriginal(box, region.first);
         mappedBoxes.push_back(mappedBox); // Add mappedBox to the mappedBoxes vector
-        cv::rectangle(imageWithBoxes, cv::Rect(mappedBox.x, mappedBox.y, mappedBox.width, mappedBox.height), cv::Scalar(255, 0, 0), 2);
+        cv::rectangle(imageWithBoxes, cv::Rect(mappedBox.x, mappedBox.y, mappedBox.w, mappedBox.h), cv::Scalar(255, 0, 0), 2);
     }
 
     cv::imshow("Image with Mapped Boxes", imageWithBoxes);
     cv::waitKey(0);
 
     // Apply Non-Maximum Suppression
-    float iouThreshold = 0.1f;
-    auto finalBoxes = sahi.nonMaximumSuppression(allBoxes, iouThreshold);
+    float iouThreshold = 0.00001f;
+    auto finalBoxes = sahi.nonMaximumSuppression(mappedBoxes, iouThreshold);
 
     // Display the final image with bounding boxes after Non-Maximum Suppression
     cv::Mat finalImage = image.clone();

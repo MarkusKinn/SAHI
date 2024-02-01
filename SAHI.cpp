@@ -30,12 +30,14 @@ std::vector<std::pair<cv::Rect, int>> SAHI::calculateSliceRegions(int image_heig
     return regions;
 }
 
-cv::Rect SAHI::mapToOriginal(const BoundingBox& boundingBox, const cv::Rect& sliceRegion) {
+BoundingBox SAHI::mapToOriginal(BoundingBox& boundingBox, const cv::Rect& sliceRegion) {
+    BoundingBox mappedBoundingBox(boundingBox.x, boundingBox.y, boundingBox.h, boundingBox.w, boundingBox.score, boundingBox.sliceIndex);
 
+    mappedBoundingBox.x += sliceRegion.x;
+    mappedBoundingBox.y += sliceRegion.y;
+
+    return mappedBoundingBox;
 }
-
-
-
 
 std::vector<BoundingBox> SAHI::nonMaximumSuppression(std::vector<BoundingBox> &boxes, float iouThreshold) {
     std::vector<BoundingBox> result;
