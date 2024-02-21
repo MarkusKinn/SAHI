@@ -34,6 +34,12 @@ std::vector<std::pair<cv::Rect, int>> SAHI::calculateSliceRegions(int image_heig
 }
 
 BoundingBox SAHI::mapToOriginal(const BoundingBox& boundingBox, const cv::Rect& sliceRegion) {
-    return {boundingBox.x + sliceRegion.x, boundingBox.y + sliceRegion.y,
-                       boundingBox.w, boundingBox.h, boundingBox.score};
+    // Create a new rectangle with updated coordinates
+    cv::Rect_<float> newRect = boundingBox.rect;
+    newRect.x += sliceRegion.x;
+    newRect.y += sliceRegion.y;
+
+    // Return a new BoundingBox object with updated rectangle and same label and probability
+    return {boundingBox.label, boundingBox.probability, newRect};
 }
+
