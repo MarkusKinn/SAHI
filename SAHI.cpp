@@ -5,15 +5,22 @@ SAHI::SAHI(int slice_height, int slice_width, float overlap_height_ratio, float 
       overlap_height_ratio_(overlap_height_ratio), overlap_width_ratio_(overlap_width_ratio) {}
 
 std::vector<std::pair<cv::Rect, int>> SAHI::calculateSliceRegions(int image_height, int image_width) {
+    int step_height = slice_height_ - static_cast<int>(slice_height_ * overlap_height_ratio_);
+    int step_width = slice_width_ - static_cast<int>(slice_width_ * overlap_width_ratio_);
+
+    int y_max = image_height - slice_height_;
+    int x_max = image_width - slice_width_;
+
+    // Estimate vector size to avoid reallocations
+    int num_rows = (y_max / step_height) + 1;
+    int num_cols = (x_max / step_width) + 1;
     std::vector<std::pair<cv::Rect, int>> regions;
+    regions.reserve(num_rows * num_cols);
 
     int index = 0;
 
     image_width_ = image_width;
     image_height_ = image_height;
-
-    int step_height = slice_height_ - static_cast<int>(slice_height_ * overlap_height_ratio_);
-    int step_width = slice_width_ - static_cast<int>(slice_width_ * overlap_width_ratio_);
 
     for (int y = 0; y < image_height; y += step_height) {
         for (int x = 0; x < image_width; x += step_width) {
@@ -34,12 +41,11 @@ std::vector<std::pair<cv::Rect, int>> SAHI::calculateSliceRegions(int image_heig
 }
 
 BoundingBox SAHI::mapToOriginal(const BoundingBox& boundingBox, const cv::Rect& sliceRegion) {
-    // Create a new rectangle with updated coordinates
     cv::Rect_<float> newRect = boundingBox.rect;
     newRect.x += sliceRegion.x;
     newRect.y += sliceRegion.y;
 
-    // Return a new BoundingBox object with updated rectangle and same label and probability
     return {boundingBox.label, boundingBox.probability, newRect};
 }
+
 

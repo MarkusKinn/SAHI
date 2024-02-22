@@ -8,5 +8,10 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 add_executable(SAHI main.cpp
         SAHI.cpp
         SAHI.h
+        CpuModel.cpp
+        CpuModel.h
+        Model.cpp
+        Model.h
+        yolov8.h
 )  # Assuming ImageSlicer.cpp is the name of the file
 target_link_libraries(SAHI ${OpenCV_LIBS}) # Link OpenCV libraries
