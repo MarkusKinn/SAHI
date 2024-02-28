@@ -2,7 +2,6 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include <random>
 
 #include "CpuModel.h"
@@ -16,6 +15,7 @@ std::vector<cv::Rect> theWholeChembangle(const cv::Mat& image, int slice_height,
     std::vector<BoundingBox> allBoxes; // For storing all the bounding boxes
 
     for (const auto& region : sliceRegions) {
+
         cv::Mat slice = image(region.first);
 
         // Run YOLOv8 model on the slice
@@ -62,7 +62,7 @@ std::vector<cv::Rect> theWholeChembangle(const cv::Mat& image, int slice_height,
 
 int main() {
     // Example usage
-    std::string model_path = "yolov8n.onnx"; // Update with the actual model path
+    std::string model_path = "plz_work.onnx";
     CpuModel yolov8_model(model_path);
 
     cv::Mat image = cv::imread("image.jpg");
