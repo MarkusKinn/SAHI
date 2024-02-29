@@ -9,13 +9,6 @@ struct BoundingBox {
     cv::Rect_<float> rect;
 };
 
-struct BoundingBoxIndex {
-    BoundingBox bbox;
-
-    int sliceIndex;
-};
-
-
 class SAHI {
 public:
     SAHI(int slice_height, int slice_width, float overlap_height_ratio, float overlap_width_ratio);

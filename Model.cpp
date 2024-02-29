@@ -53,8 +53,8 @@ std::vector<BoundingBox> InferenceModel::process_output(const cv::Mat& output_ma
         BoundingBox obj{};
 
         obj.probability = scores[idx];
-        obj.label       = labels[idx];
-        obj.rect        = bboxes[idx];
+        obj.label = labels[idx];
+        obj.rect= bboxes[idx];
 
         result.push_back(obj);
     }

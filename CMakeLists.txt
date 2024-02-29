@@ -3,7 +3,7 @@ project(SAHI)
 
 # Set the OpenCV_DIR variable to the directory containing OpenCVConfig.cmake.
 # This is usually inside the build directory of OpenCV or in 'share/OpenCV' of the installation directory.
-set(OpenCV_DIR /usr/local/share/opencv4)
+set(OpenCV_DIR /usr/local/share/opencv4/opencv2)
 
 # Find the OpenCV package.
 find_package(OpenCV REQUIRED)
